@@ -11,8 +11,11 @@
 </head>
 <body>
     <div class="game-window">
-        <div>Grid Size: <span id="grid-size-label"></span></div>
-        <input type="range" min="3" max="10" value="3" class="slider" id="grid-size-slider">
+        <div class="game-info">
+            <span>Grid Size: <span id="grid-size-label"></span></span>
+            <span>Marks in a row to win: <input type="number" step="1" min="3" max="10" id="win-condition" style="font-size: 30px; width: 70px;" value="3"></input></span>
+        </div>
+        <div class="slider-container"><input type="range" min="3" max="10" value="3" class="slider" id="grid-size-slider"></div>
         <div class="grid-container" id="grid-container">
             <div><canvas class="cell-canvas"></canvas></div>
             <div><canvas class="cell-canvas"></canvas></div>
@@ -25,7 +28,7 @@
             <div><canvas class="cell-canvas"></canvas></div>
 
         </div>
-    
+        <div class="reset-button-container"><button class="reset-button">Reset</button></div>
 
     </div>
 </body>
