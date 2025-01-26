@@ -15,7 +15,8 @@ $(document).ready(function () {
         output.innerHTML = this.value;
         resize_grid(this.value);
     }
-
+    $(".reset-button").click(reset);
+    $("#win-condition").change(function () {winCondition = parseInt(this.value)});
 })
 
 
@@ -37,7 +38,7 @@ function resize_grid(n) {
     let grid = $("#grid-container");
 
     grid.css("grid-template-columns", `repeat(${n}, 1fr)`);
-    grid.css("grid-template-rows", `repeat(${n}, 1fr)`);
+    //grid.css("grid-template-rows", `repeat(${n}, 1fr)`);
 
     grid.empty();
 
@@ -45,6 +46,11 @@ function resize_grid(n) {
         grid.append(`<div class="cell-canvas" id=cell_${index}></div>`);
         $(`#cell_${index}`).click(cell_canvas_click);
     }
+}
+
+function reset() {
+    resize_grid(gameMatrix.length);
+    playerToMove = 0;
 }
 
 function cell_canvas_click() {
