@@ -16,7 +16,7 @@ $(document).ready(function () {
         resize_grid(this.value);
     }
     $(".reset-button").click(reset);
-    $("#win-condition").change(function () {winCondition = parseInt(this.value)});
+    $("#win-condition").change(function () { winCondition = parseInt(this.value) });
 })
 
 
@@ -99,112 +99,129 @@ function checkWinCondition(row, col) {
     let whoMoved = (playerToMove + 1) % 2;
     let x = row;
     let y = col;
+    let victoryChainIds = [];
 
     // left
     while (y >= 0 && gameMatrix[x][y] == whoMoved && counter < winCondition) {
+        victoryChainIds.push(coordToId(x, y));
         y--;
         counter++;
-        //console.log("Left ", `${y+1} -> ${y} Current Counter: ${counter}`);
     }
     x = row;
     y = col;
     // right
     counter--;
+    victoryChainIds.shift();
     while (y < gameMatrix.length && gameMatrix[x][y] == whoMoved && counter < winCondition) {
+        victoryChainIds.push(coordToId(x, y));
         y++;
         counter++;
-        //console.log("Right ", `${y-1} -> ${y} Current Counter: ${counter}`);
     }
     x = row;
     y = col;
     console.log("Horizontal Check: ", counter, "Who moved: ", whoMoved, "Win condition:", winCondition);
-    if (counter >= winCondition) {
-        playerToMove = 3;
-        //alert(`Player ${whoMoved} Won!`);
-        return;
-    }
+    if (checkWinCounter(counter, victoryChainIds)) { return; }
     counter = 0;
+    victoryChainIds = [];
 
     // up
     while (x >= 0 && gameMatrix[x][y] == whoMoved && counter < winCondition) {
+        victoryChainIds.push(coordToId(x, y));
         x--;
         counter++;
     }
     x = row;
-    y = col;    
+    y = col;
 
     // down
     counter--;
+    victoryChainIds.shift();
     while (x < gameMatrix.length && gameMatrix[x][y] == whoMoved && counter < winCondition) {
+        victoryChainIds.push(coordToId(x, y));
         x++;
         counter++;
     }
     x = row;
-    y = col; 
-    console.log("Vertical Check: ", counter, "Who moved: ", whoMoved, "Win condition:", winCondition);   
-    if (counter >= winCondition) {
-        playerToMove = 3;
-        //alert(`Player ${whoMoved} Won!`);
-        return;
-    }
+    y = col;
+    console.log("Vertical Check: ", counter, "Who moved: ", whoMoved, "Win condition:", winCondition);
+    if (checkWinCounter(counter, victoryChainIds)) { return; }
     counter = 0;
+    victoryChainIds = [];
 
     // left-up
     while (x >= 0 && y >= 0 && gameMatrix[x][y] == whoMoved && counter < winCondition) {
+        victoryChainIds.push(coordToId(x, y));
         y--;
         x--;
         counter++;
     }
     x = row;
-    y = col;    
+    y = col;
 
     // right-down
     counter--;
+    victoryChainIds.shift();
     while (x < gameMatrix.length && y < gameMatrix.length && gameMatrix[x][y] == whoMoved && counter < winCondition) {
+        victoryChainIds.push(coordToId(x, y));
         y++;
         x++;
         counter++;
     }
     x = row;
-    y = col;    
-    console.log("Left-Up Diagonal Check: ", counter, "Who moved: ", whoMoved, "Win condition:", winCondition);   
-    if (counter >= winCondition) {
-        playerToMove = 3;
-        //alert(`Player ${whoMoved} Won!`);
-        return;
-    }
+    y = col;
+    console.log("Left-Up Diagonal Check: ", counter, "Who moved: ", whoMoved, "Win condition:", winCondition);
+    if (checkWinCounter(counter, victoryChainIds)) { return; }
     counter = 0;
+    victoryChainIds = [];
 
     // right-up
     while (x >= 0 && y < gameMatrix.length && gameMatrix[x][y] == whoMoved && counter < winCondition) {
+        victoryChainIds.push(coordToId(x, y));
         y++;
         x--;
         counter++;
     }
     x = row;
-    y = col;    
+    y = col;
 
     // left-down
     counter--;
+    victoryChainIds.shift();
     while (x < gameMatrix.length && y >= 0 && gameMatrix[x][y] == whoMoved && counter < winCondition) {
+        victoryChainIds.push(coordToId(x, y));
         y--;
         x++;
         counter++;
     }
     x = row;
-    y = col;    
-    console.log("Right-Up Diagonal Check: ", counter, "Who moved: ", whoMoved, "Win condition:", winCondition);   
+    y = col;
+    console.log("Right-Up Diagonal Check: ", counter, "Who moved: ", whoMoved, "Win condition:", winCondition);
+    if (checkWinCounter(counter, victoryChainIds)) { return; }
+}
+
+function checkWinCounter(counter, victoryChainIds) {
     if (counter >= winCondition) {
         playerToMove = 3;
-        //alert(`Player ${whoMoved} Won!`);
-        return;
+        console.log("Victory Chain: ", victoryChainIds);
+        victoryChainIds.forEach(element => {
+            $(`#cell_${element}`).css("background", "Moccasin");
+        });
+        
+        return true;
     }
+    return false;
 }
 
 function idToCoord(id) {
     let n = gameMatrix.length;
     let x = Math.floor(id / n);
     let y = id - x * n;
-    console.log("Id=", id, " x=", x, " y=", y);
+    console.log("Id to Coord: Id=", id, " x=", x, " y=", y);
     return { x, y };
+}
+function coordToId(x, y) {
+    let n = gameMatrix.length;
+    let id = x * n + y;
+    console.log("Coord to ID: Id=", id, " x=", x, " y=", y);
+    return id;
 }
