@@ -9,13 +9,14 @@ $(document).ready(function () {
     let output = document.getElementById("grid-size-label");
     output.innerHTML = slider.value;
 
-    resize_grid(slider.value);
+    resize_grid(parseInt(slider.value));
 
     slider.oninput = function () {
         output.innerHTML = this.value;
-        resize_grid(this.value);
+        resize_grid(parseInt(this.value));
     }
     $(".reset-button").click(reset);
+
     $("#win-condition").change(function () { winCondition = parseInt(this.value) });
 })
 
@@ -29,7 +30,7 @@ function resize_grid(n) {
     console.log(n);
     gameMatrix = [];
     for (let i = 0; i < n; i++) {
-        let col = new Array(parseInt(n)).fill(3);
+        let col = new Array(n).fill(3);
         gameMatrix.push(col);
     }
     console.log("Resized Matrix:");
