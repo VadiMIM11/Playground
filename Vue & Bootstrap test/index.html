@@ -12,28 +12,29 @@
 </head>
 
 <body>
-    <div id="app" v-bind:data-bs-theme="theme">
-    <div class="container rounded my-3 bg-info text-white p-4">
-        <p class="text-center">Header</p>
-        <div class="row">
-            <div class="col-md-4 text-white text-center p-3 border border-2 border-white">Column 1</div>
-            <div class="col-md-4 text-white text-center p-3 border border-2 border-white">
-                Column 2
-                <div class="form-check form-switch form-switch-xl border boder-white">
-                    <input class="form-check-input" type="checkbox" role="switch" id="themeSwitch" @click="toggleTheme" checked>
-                    <label class="form-check-label" for="themeSwitch">Switch Theme!</label>
+    <div id="app" >
+        <div id="background" :data-bs-theme="theme" :class="`container-fluid bg-${theme}`">
+            <div class="container rounded my-3 bg-primary text-white p-4">
+                <p class="text-center">{{theme}} AND {{direction}}</p>
+                <div :class="`${direction}`">
+                    <div class="col-md-4 text-white text-center p-3 border border-2 border-white">Column 1</div>
+                    <div class="col-md-4 text-white text-center p-3 border border-2 border-white">
+                        Column 2
+                        <div class="form-check form-switch form-switch-xl border boder-white">
+                            <input class="form-check-input" type="checkbox" role="switch" id="themeSwitch"
+                                @click="toggleTheme" checked>
+                            <label class="form-check-label" for="themeSwitch">Switch Theme!</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4 text-white text-center p-3 border border-2 border-white">Column 3</div>
                 </div>
 
             </div>
-            <div class="col-md-4 text-white text-center p-3 border border-2 border-white">Column 3</div>
         </div>
-
     </div>
-</div>
+
+    <script src="scripts/main.js"></script>
 </body>
-
-
-<script src="scripts/main.js"></script>
-
 
 </html>
