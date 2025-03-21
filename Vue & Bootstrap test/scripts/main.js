@@ -1,7 +1,7 @@
 
-const { createApp } = Vue;
+  const { createApp } = Vue;
 
-createApp({
+const app = createApp({
     data() {
         return {
             theme: 'dark',
@@ -27,4 +27,8 @@ createApp({
         }
     }
 
-}).mount('#app');
+});
+
+app.mount('#app');
+
+
