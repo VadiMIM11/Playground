@@ -2,18 +2,25 @@ $(function () {
     populateTimetable();
 });
 
-function populateTimetable(interval = 15) {
+
+
+function populateTimetable(interval = 90) {
     const timetable = $('#timetable');
     var tableHeader = getTableHeader();
-    timetable.append(tableHeader);
-    const numColumns = tableHeader.children().first().children().length;
+    const numColumns = tableHeader.children().find('th').length;
+    // const colgroup = getColgroup(numColumns);
     const tbody = getTableBody(numColumns, interval);
+
+    // timetable.append(colgroup);
+    timetable.append(tableHeader);
     timetable.append(tbody);
 }
 
 function getTableHeader() {
+
     const thead = $('<thead></thead>');
     const tr = $('<tr></tr>');
+    tr.append('<th class="text-center">Time</th>');
     tr.append('<th class="text-center">Monday</th>');
     tr.append('<th class="text-center">Tuesday</th>');
     tr.append('<th class="text-center">Wednesday</th>');
@@ -25,18 +32,28 @@ function getTableHeader() {
     return thead;
 }
 
+// function getColgroup(numColumns) {
+//     const colgroup = $('<colgroup></colgroup>');
+
+//     colgroup.append(`<col style="width: auto;"></col>`); // Time column
+    
+//     for (let i = 0; i < numColumns - 1; i++) {
+//         colgroup.append(`<col style="width: auto;"></col>`);
+//     }
+//     return colgroup;
+// }
+
 function getTableBody(numColumns, interval) {
     const tbody = $('<tbody></tbody>');
     tbody.addClass('table-group-divider');
     //alert("Num Columns: " + numColumns);
-    
+
     for (let i = 0; i < 24 * 60 / interval; i++) {
         const tr = $('<tr></tr>');
-        for (let j = 0; j < numColumns; j++) {
+        const time = formatMinutesToTime(i * interval);
+        tr.append('<th class="text-center">' + time + '</th>');
+        for (let j = 0; j < numColumns - 1; j++) {
             const td = $('<td></td>');
-            td.addClass('text-center');
-            const time = formatMinutesToTime(i * interval);
-            td.text(time);
             tr.append(td);
         }
         tbody.append(tr);

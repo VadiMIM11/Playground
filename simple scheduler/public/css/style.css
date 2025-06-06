@@ -1,0 +1,6 @@
+#timetable{
+    table-layout: fixed;
+    width: 100%;
+    user-select: none;
+}
+
