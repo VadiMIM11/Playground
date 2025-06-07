@@ -12,14 +12,36 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <h1 class="text-center">Scheduler!</h1>
+            <h1 class="text-center fw-bold">Scheduler!</h1>
         </div>
-        <div class="row-4">Settings</div>
-        <div class="schedule container p-3 border border-1 border-black rounded-1">
-            <div id="timetable-container">
-            <!-- <table id="timetable" class="table table-sm table-striped table-bordered"></table> -->
+        <div class="row">
+            <div class="col-2 text-center fw-bold">
+                <div class="form-group">
+                    <label for="interval">Interval (minutes):</label>
+                    <input type="number" id="interval" class="form-control" value="60" min="1" max="1440">
+                    <label for="format">Time Format:</label>
+                </div>
+                <div class="form-group">
+                    <select id="format" class="form-select">
+                        <option value="12">12-hour</option>
+                        <option value="24" selected>24-hour</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="start-time">Start Time:</label>
+                    <input type="time" id="start-time" class="form-control" value="06:00">
+                </div>
+                <div class="form-group">
+                    <label for="end-time">End Time:</label>
+                    <input type="time" id="end-time" class="form-control" value="22:00">
+                </div>
+                <button id="update-timetable" class="btn btn-primary m-2">Apply</button>
+            </div>
+            <div class="col-8 p-3 border border-1 border-black rounded-1">
+                <div id="timetable-container">
+                </div>
             </div>
         </div>
     </div>

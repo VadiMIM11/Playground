@@ -7,13 +7,34 @@ $(function () {
     });
     timetable.render();
 
-    let timetable2 = new Timetable('#timetable-container', {
-        interval: 240
+    // let timetable2 = new Timetable('#timetable-container', {
+    //     interval: 240
+    // });
+    // timetable2.render();
+
+
+    $("#update-timetable").on('click', function () {
+        interv = $("#interval").val();
+        start = $("#start-time").val();
+        end = $("#end-time").val();
+        console.log(start, end, interv);
+
+        intervNum = parseInt(interv);
+        startNum = parseInt(start.split(':')[0]) * 60 + parseInt(start.split(':')[1]);
+        endNum = parseInt(end.split(':')[0]) * 60 + parseInt(end.split(':')[1]);
+
+        console.log(intervNum, startNum, endNum);
+        
+        timetable.updateOptions({
+            interval: intervNum,
+            startMinute: startNum,
+            endMinute: endNum,
+        });
     });
-    timetable2.render();
 });
 
 class Timetable {
+    static #counter = 0;
     static mouseEventsRegistered = false;
     static isLeftMouseDown = false;
     static isSelecting = true; // Is user currently selecting or deselecting cells
@@ -28,27 +49,28 @@ class Timetable {
         this.options = { ...Timetable.defaultOptions, ...options };
         this.containerSelector = selector;
         this.container = $(this.containerSelector);
-        this.interval = options.interval; // Interval in minutes
         this.timetable = undefined;
-        this.init();
+        this.id = Timetable.#counter++;
+        this.#init();
     }
 
-    init() {
-        Timetable.registerMouseEvents();
-        this.populate();
+    #init() {
+        Timetable.#registerMouseEvents();
+        this.#populate();
     }
 
-    populate(interval = 120) {
+    #populate() {
         this.timetable = $('<table class="timetable table table-sm table-striped table-bordered"></table>');
-        var tableHeader = this.getTableHeader();
+        this.timetable.attr('id', `timetable-${this.id}`);
+        var tableHeader = this.#getTableHeader();
         const numColumns = tableHeader.children().find('th').length;
-        const tbody = this.getTableBody(numColumns);
+        const tbody = this.#getTableBody(numColumns);
 
         this.timetable.append(tableHeader);
         this.timetable.append(tbody);
     }
 
-    getTableHeader() {
+    #getTableHeader() {
         const thead = $('<thead></thead>');
         const tr = $('<tr></tr>');
         tr.append('<th class="text-center">Time Slot</th>');
@@ -63,31 +85,31 @@ class Timetable {
         return thead;
     }
 
-    getTableBody(numColumns) {
+    #getTableBody(numColumns) {
         const tbody = $('<tbody></tbody>');
         tbody.addClass('table-group-divider');
         var minute = this.options.startMinute;
-        for (let i = 0; i < (24 * 60 - this.options.startMinute - (24 * 60 - this.options.endMinute)) / this.interval; i++) {
+        for (let i = 0; i < (24 * 60 - this.options.startMinute - (24 * 60 - this.options.endMinute)) / this.options.interval; i++) {
             const tr = $('<tr></tr>');
             const current = this.formatMinutesToTime(minute);
-            if(minute + this.interval > this.options.endMinute) {
+            if(minute + this.options.interval > this.options.endMinute) {
                 break; // Stop if the next interval exceeds the end minute
             }
-            const next = this.formatMinutesToTime(minute + this.interval);
+            const next = this.formatMinutesToTime(minute + this.options.interval);
             const time = `${current} - ${next}`;
             tr.append('<th class="text-center">' + time + '</th>');
             for (let j = 0; j < numColumns - 1; j++) {
                 const td = $('<td></td>');
-                td.on('mousedown mouseenter', (e) => this.selectCell(e, td));
+                td.on('mousedown mouseenter', (e) => this.#selectCell(e, td));
                 tr.append(td);
             }
             tbody.append(tr);
-            minute += this.interval;
+            minute += this.options.interval;
         }
         return tbody;
     }
 
-    selectCell(e, element) {
+    #selectCell(e, element) {
         if (e.type === 'mousedown' && e.button === 0) {
             if (element.hasClass('bg-success')) {
                 Timetable.isSelecting = false; // User is deselecting
@@ -109,7 +131,7 @@ class Timetable {
         }
     }
 
-    static registerMouseEvents() {
+    static #registerMouseEvents() {
         if (Timetable.mouseEventsRegistered) return;
 
         $(document).on('mousedown', function (event) {
@@ -138,21 +160,21 @@ class Timetable {
         return `${paddedHours}:${paddedMins}`;
     }
 
+    updateOptions(newOptions) {
+        this.options = { ...this.options, ...newOptions };
+        //this.container.empty();
+        //this.container.children(`#timetable-${this.id}`).remove(); // Clear the existing timetable
+        this.#populate(); // Re-populate with new options
+        this.container.children(`#timetable-${this.id}`).replaceWith(this.timetable); // Replace the old timetable with the new one
+        //this.render(); // Render the updated timetable
+    }
+
     render() {
         this.container.append(this.timetable);
     }
 }
 
 
-// function getColgroup(numColumns) {
-//     const colgroup = $('<colgroup></colgroup>');
 
-//     colgroup.append(`<col style="width: auto;"></col>`); // Time column
-
-//     for (let i = 0; i < numColumns - 1; i++) {
-//         colgroup.append(`<col style="width: auto;"></col>`);
-//     }
-//     return colgroup;
-// }
 
 
