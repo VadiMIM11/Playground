@@ -1,16 +1,13 @@
 
 $(function () {
-    // const settings = {};
-    // settings.containerSelector = '#timetable';
-    // settings.interval = 120; // Interval in minutes
-    let timetable = new Timetable({
-        containerSelector: '#timetable-container',
-        interval: 120
+    let timetable = new Timetable('#timetable-container', {
+        interval: 15,
+        startMinute: 360, // 6 AM
+        endMinute: 1320, // 10 PM
     });
     timetable.render();
 
-    let timetable2 = new Timetable({
-        containerSelector: '#timetable-container',
+    let timetable2 = new Timetable('#timetable-container', {
         interval: 240
     });
     timetable2.render();
@@ -20,11 +17,18 @@ class Timetable {
     static mouseEventsRegistered = false;
     static isLeftMouseDown = false;
     static isSelecting = true; // Is user currently selecting or deselecting cells
+    static defaultOptions = {
+        interval: 60,
+        startMinute: 0,
+        endMinute: 1440,
+    }
 
-    constructor(settings = { containerSelector: '#timetable', interval: 120 }) {
-        this.containerSelector = settings.containerSelector;
+    constructor(selector, options = {}) {
+
+        this.options = { ...Timetable.defaultOptions, ...options };
+        this.containerSelector = selector;
         this.container = $(this.containerSelector);
-        this.interval = settings.interval; // Interval in minutes
+        this.interval = options.interval; // Interval in minutes
         this.timetable = undefined;
         this.init();
     }
@@ -32,17 +36,14 @@ class Timetable {
     init() {
         Timetable.registerMouseEvents();
         this.populate();
-        //this.render();
     }
 
     populate(interval = 120) {
         this.timetable = $('<table class="timetable table table-sm table-striped table-bordered"></table>');
         var tableHeader = this.getTableHeader();
         const numColumns = tableHeader.children().find('th').length;
-        // const colgroup = getColgroup(numColumns);
         const tbody = this.getTableBody(numColumns);
 
-        // this.timetable.append(colgroup);
         this.timetable.append(tableHeader);
         this.timetable.append(tbody);
     }
@@ -65,12 +66,14 @@ class Timetable {
     getTableBody(numColumns) {
         const tbody = $('<tbody></tbody>');
         tbody.addClass('table-group-divider');
-        //alert("Num Columns: " + numColumns);
-
-        for (let i = 0; i < 24 * 60 / this.interval; i++) {
+        var minute = this.options.startMinute;
+        for (let i = 0; i < (24 * 60 - this.options.startMinute - (24 * 60 - this.options.endMinute)) / this.interval; i++) {
             const tr = $('<tr></tr>');
-            const current = this.formatMinutesToTime(i * this.interval);
-            const next = this.formatMinutesToTime((i + 1) * this.interval);
+            const current = this.formatMinutesToTime(minute);
+            if(minute + this.interval > this.options.endMinute) {
+                break; // Stop if the next interval exceeds the end minute
+            }
+            const next = this.formatMinutesToTime(minute + this.interval);
             const time = `${current} - ${next}`;
             tr.append('<th class="text-center">' + time + '</th>');
             for (let j = 0; j < numColumns - 1; j++) {
@@ -79,6 +82,7 @@ class Timetable {
                 tr.append(td);
             }
             tbody.append(tr);
+            minute += this.interval;
         }
         return tbody;
     }
@@ -106,7 +110,7 @@ class Timetable {
     }
 
     static registerMouseEvents() {
-        if (this.mouseEventsRegistered) return;
+        if (Timetable.mouseEventsRegistered) return;
 
         $(document).on('mousedown', function (event) {
             if (event.button === 0) { // 0 = left button
@@ -119,6 +123,8 @@ class Timetable {
                 Timetable.isLeftMouseDown = false;
             }
         });
+
+        Timetable.mouseEventsRegistered = true;
     }
 
     formatMinutesToTime(minutes) {
@@ -133,8 +139,6 @@ class Timetable {
     }
 
     render() {
-        console.log("Rendering timetable");
-        console.log(this.timetable);
         this.container.append(this.timetable);
     }
 }
