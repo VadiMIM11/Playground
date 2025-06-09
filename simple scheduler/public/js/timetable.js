@@ -1,9 +1,21 @@
 
 $(function () {
+
+    let format = $("#format").val();
+    let interv = $("#interval").val();
+    let start = $("#start-time").val();
+    let end = $("#end-time").val();
+
+    let intervNum = parseInt(interv);
+    let startNum = parseInt(start.split(':')[0]) * 60 + parseInt(start.split(':')[1]);
+    let endNum = parseInt(end.split(':')[0]) * 60 + parseInt(end.split(':')[1]);
+
+
+
     let timetable = new Timetable('#timetable-container', {
-        interval: 15,
-        startMinute: 360, // 6 AM
-        endMinute: 1320, // 10 PM
+        interval: intervNum,
+        startMinute: startNum,
+        endMinute: endNum,
     });
     timetable.render();
 
@@ -14,17 +26,19 @@ $(function () {
 
 
     $("#update-timetable").on('click', function () {
+
+        format = $("#format").val();
         interv = $("#interval").val();
         start = $("#start-time").val();
         end = $("#end-time").val();
-        console.log(start, end, interv);
 
         intervNum = parseInt(interv);
         startNum = parseInt(start.split(':')[0]) * 60 + parseInt(start.split(':')[1]);
         endNum = parseInt(end.split(':')[0]) * 60 + parseInt(end.split(':')[1]);
 
+        console.log(start, end, interv, format);
         console.log(intervNum, startNum, endNum);
-        
+
         timetable.updateOptions({
             interval: intervNum,
             startMinute: startNum,
@@ -92,7 +106,7 @@ class Timetable {
         for (let i = 0; i < (24 * 60 - this.options.startMinute - (24 * 60 - this.options.endMinute)) / this.options.interval; i++) {
             const tr = $('<tr></tr>');
             const current = this.formatMinutesToTime(minute);
-            if(minute + this.options.interval > this.options.endMinute) {
+            if (minute + this.options.interval > this.options.endMinute) {
                 break; // Stop if the next interval exceeds the end minute
             }
             const next = this.formatMinutesToTime(minute + this.options.interval);
