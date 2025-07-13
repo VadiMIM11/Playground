@@ -12,8 +12,9 @@
 </head>
 
 <body>
-    <div id="app" >
-        <div id="background" :data-bs-theme="theme" :class="`container-fluid bg-${theme} d-flex flex-column justify-content-center`">
+    <div id="app">
+        <div id="background" :data-bs-theme="theme"
+            :class="`container-fluid bg-${theme} d-flex flex-column justify-content-center`">
             <div class="container rounded-5 bg-primary text-white h-75">
                 <p class="text-center">{{theme}} AND {{direction}}</p>
                 <div :class="`d-flex ${direction} justify-content-center`">
@@ -26,6 +27,12 @@
                         </div>
 
                         <div id="game" class="h-100 bg-white">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6">Column 1</div>
+                                    <div class="col-md-6">Column 2</div>
+                                </div>
+                            </div>
 
                         </div>
 
@@ -37,7 +44,7 @@
         </div>
     </div>
 
-    
+
     <script src="scripts/main.js"></script>
     <script src="scripts/game.js"></script>
 </body>
