@@ -8,7 +8,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className='bg-black'>
         <BootstrapLoader />
-        {/* <Navbar></Navbar> */}
+        <Navbar></Navbar>
         {children}
       </body>
     </html>

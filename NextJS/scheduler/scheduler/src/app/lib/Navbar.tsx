@@ -1,13 +1,14 @@
-// app/components/Navbar.tsx
-"use client";
+import Link from "next/link";
+import { CalendarDateRangeIcon } from "@heroicons/react/16/solid";
 
 export default function Navbar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav data-bs-theme="dark" className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
-          Navbar
-        </a>
+        <Link className="navbar-brand" href="/">
+          <span>Scheduler</span>
+          <CalendarDateRangeIcon className="ms-1"  style={{width: "25px", height: "25px"}}></CalendarDateRangeIcon>
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -22,17 +23,17 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#">
+              <Link className="nav-link active" aria-current="page" href="/">
                 Home
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <Link className="nav-link" href="#">
                 Link
-              </a>
+              </Link>
             </li>
             <li className="nav-item dropdown">
-              <a
+              <Link
                 className="nav-link dropdown-toggle"
                 href="#"
                 role="button"
@@ -40,32 +41,32 @@ export default function Navbar() {
                 aria-expanded="false"
               >
                 Dropdown
-              </a>
+              </Link>
               <ul className="dropdown-menu">
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <Link className="dropdown-item" href="#">
                     Action
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <Link className="dropdown-item" href="#">
                     Another action
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <hr className="dropdown-divider" />
                 </li>
                 <li>
-                  <a className="dropdown-item" href="#">
+                  <Link className="dropdown-item" href="#">
                     Something else here
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </li>
             <li className="nav-item">
-              <a className="nav-link disabled" aria-disabled="true">
+              <Link className="nav-link disabled" aria-disabled="true" href={"#"}>
                 Disabled
-              </a>
+              </Link>
             </li>
           </ul>
           <form className="d-flex" role="search">
